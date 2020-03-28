@@ -3,6 +3,7 @@ package com.algaworks.socialbooks.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -50,5 +51,23 @@ public class LivrosController {
 	public Livro salvar(@RequestBody Livro livro) {
 		return livrosRepository.save(livro);
 	}
+	
+	@RequestMapping(value="/{id}", method=RequestMethod.GET)
+	public Livro buscar(@PathVariable("id") Long id) {
+		return livrosRepository.findOne(id);
+	}
+	
+	@RequestMapping(value="/{id}", method=RequestMethod.DELETE)
+	public void deletar(@PathVariable("id") Long id) {
+		livrosRepository.delete(id);
+	}
+	
+	@RequestMapping(value="/{id}", method=RequestMethod.PUT)
+	public Livro atualizar(@PathVariable("id") Long id, @RequestBody Livro livro) {		
+		livro.setId(id);
+		return livrosRepository.save(livro);
+	}
+	
+	
 
 }
