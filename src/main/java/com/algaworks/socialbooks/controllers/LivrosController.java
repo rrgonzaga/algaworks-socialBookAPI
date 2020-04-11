@@ -1,13 +1,16 @@
 package com.algaworks.socialbooks.controllers;
 
+import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.algaworks.socialbooks.domain.Livro;
 import com.algaworks.socialbooks.repository.LivrosRepository;
@@ -48,13 +51,26 @@ public class LivrosController {
 	 * @param livro
 	 */
 	@RequestMapping(method=RequestMethod.POST)
-	public Livro salvar(@RequestBody Livro livro) {
-		return livrosRepository.save(livro);
+	public ResponseEntity<Void> salvar(@RequestBody Livro livro) {		
+		
+		livro = livrosRepository.save(livro);
+		//Criando um URI para acrescentar no cabeçalho de retorno através da variável Location,
+		//a uri para se obter o recurso criado. 
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(livro.getId()).toUri();
+		
+		return ResponseEntity.created(uri).build();
 	}
 	
 	@RequestMapping(value="/{id}", method=RequestMethod.GET)
-	public Livro buscar(@PathVariable("id") Long id) {
-		return livrosRepository.findOne(id);
+	public ResponseEntity<?> buscar(@PathVariable("id") Long id) {
+		Livro livro = livrosRepository.findOne(id);
+		
+		if(livro == null) {
+			return ResponseEntity.notFound().build();
+		}
+		
+		return ResponseEntity.ok(livro);
+		//return ResponseEntity.status(HttpStatus.OK).body(livro);		
 	}
 	
 	@RequestMapping(value="/{id}", method=RequestMethod.DELETE)
