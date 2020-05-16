@@ -24,7 +24,7 @@ public class LivrosService {
 		Livro livro = livrosRepository.findOne(id);
 		
 		if(livro == null) {
-			throw new LivroNaoEncontradoException("O livro não foi encontrado");
+			throw new LivroNaoEncontradoException();
 		}		
 		
 		return livro;
@@ -42,7 +42,7 @@ public class LivrosService {
 		try {
 			livrosRepository.delete(id);
 		} catch (EmptyResultDataAccessException e) {			
-			throw new LivroNaoEncontradoException("O livro não foi encontrado");
+			throw new LivroNaoEncontradoException();
 		}		
 	}
 	
@@ -50,7 +50,9 @@ public class LivrosService {
 		Boolean livroExiste = verificarExistencia(livro);
 		if(livroExiste) {
 			livrosRepository.save(livro);
-		}		
+		} else {
+			throw new LivroNaoEncontradoException();
+		}
 	}
 	
 	private Boolean verificarExistencia(Livro livro) {
