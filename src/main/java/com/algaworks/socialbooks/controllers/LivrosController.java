@@ -4,7 +4,6 @@ import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.algaworks.socialbooks.domain.Comentario;
 import com.algaworks.socialbooks.domain.Livro;
 import com.algaworks.socialbooks.services.LivrosService;
-import com.algaworks.socialbooks.services.exceptions.LivroNaoEncontradoException;
 /**
  * 
  * @author Rodrigo
@@ -75,7 +74,7 @@ public class LivrosController {
 	@RequestMapping(value="/{id}", method=RequestMethod.DELETE)
 	public ResponseEntity<Void> deletar(@PathVariable("id") Long id) {		
 		livrosServices.deletar(id);		
-		return ResponseEntity.noContent().build();		
+		return ResponseEntity.noContent().build();
 	}
 	
 	@RequestMapping(value="/{id}", method=RequestMethod.PUT)
@@ -83,7 +82,17 @@ public class LivrosController {
 		
 		livro.setId(id);
 		livrosServices.atualizar(livro);		
-		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();		
+	}
+	
+	@RequestMapping(value="/{id}/comentarios", method = RequestMethod.POST)
+	public ResponseEntity<Void> adicionarComentario(@PathVariable("id") Long livroId, @RequestBody Comentario comentario) {
+		
+		livrosServices.salvarComentario(livroId, comentario);
+		
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().build().toUri();
+		
+		return ResponseEntity.created(uri).build();	
 		
 	}
 	

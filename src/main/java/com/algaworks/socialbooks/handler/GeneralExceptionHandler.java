@@ -18,7 +18,7 @@ public class GeneralExceptionHandler {
 		
 		DetalhesErro erro = new DetalhesErro();
 		erro.setStatus(404L);
-		erro.setTitulo("O livro não pôde ser encontrado");
+		erro.setTitulo(e.getMessage()); //O livro não foi encontrado
 		erro.setMensagemDesenvolvedor("http://erros.socialbooks.com/404");
 		erro.setTimeStamp(System.currentTimeMillis());		
 		
