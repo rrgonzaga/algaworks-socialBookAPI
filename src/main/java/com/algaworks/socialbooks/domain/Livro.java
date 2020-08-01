@@ -3,13 +3,14 @@ package com.algaworks.socialbooks.domain;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -31,13 +32,19 @@ public class Livro {
 	
 	@JsonInclude(Include.NON_NULL)
 	@OneToMany(mappedBy="livro")
-	private List<Comentario> comentarios;
+	private List<Comentario> comentarios;	
 	
-	//TODO Desafio: Implementar o relacionamento MUITOS PARA MUITOS. Um livro pode ser escrito por um ou mais autores e um autor pode escrever um ou vários livros.  
-	@JsonInclude(Include.NON_NULL)
-	@JoinColumn(name = "AUTOR_ID")
-	@ManyToOne(fetch = FetchType.EAGER)	
-	private Autor autor;
+//	@JsonInclude(Include.NON_NULL)
+//	@JoinColumn(name = "AUTOR_ID")	
+//	@ManyToOne(fetch = FetchType.EAGER)	
+//	private Autor autor;
+	
+	@ManyToMany(cascade = {CascadeType.DETACH})
+	@JoinTable(
+			name="Livro_Autor", joinColumns = {@JoinColumn(name="livro_id")}
+			,inverseJoinColumns = {@JoinColumn(name="autor_id")}
+	)
+	private List<Autor> autores; 
 	
 	public Livro() {}
 	
@@ -81,11 +88,20 @@ public class Livro {
 	public void setComentarios(List<Comentario> comentarios) {
 		this.comentarios = comentarios;
 	}
-	public Autor getAutor() {
-		return autor;
+	
+//	public Autor getAutor() {
+//		return autor;
+//	}
+//	public void setAutor(Autor autor) {
+//		this.autor = autor;
+//	}
+	
+	public List<Autor> getAutores() {
+		return autores;
 	}
-	public void setAutor(Autor autor) {
-		this.autor = autor;
+	
+	public void setAutores(List<Autor> autores) {
+		this.autores = autores;
 	}
 
 }

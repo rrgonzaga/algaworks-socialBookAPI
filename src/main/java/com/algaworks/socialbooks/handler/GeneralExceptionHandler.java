@@ -33,6 +33,7 @@ public class GeneralExceptionHandler {
 	//Tratando qualquer exceção desconhecida
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<Void> handleUnknownException(Exception e, HttpServletRequest request){
+		e.printStackTrace();
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 	}
 

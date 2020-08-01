@@ -7,20 +7,24 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Autor {
+	// INSERT INTO AUTOR (NOME) VALUES ('Emílio Dias')
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String nome;
 	private Date dataNascimento;
-	private String nacionalidade;
+	private String nacionalidade;	
 	
-	@OneToMany(mappedBy = "autor")
+//	@OneToMany(mappedBy = "autor")
+//	@JsonIgnore
+	@ManyToMany(mappedBy = "autores")
 	@JsonIgnore
 	private List<Livro> livros;
 	
